@@ -5,7 +5,10 @@
 
 ## TARGET OBJECT
 
+scheme
 ![scheme](./images/scheme.png)
+
+P&ID
 ![P&ID](./images/scheme-P&ID.png)
 
 ### Hardware Platform
@@ -89,10 +92,14 @@ Develop a HMI for sensor panel in IDE Easybuilder
     - alarm (+ bitlamp indicator, blink indicator)
     - process state (+ word indicator, text)
 
+![screen main](./images/screen-main.png)
+
 - Menu Screen
   - indicator from Main Screen
   - input setpoint of level to stop pump
   - language selector
+
+![screen menu](./images/screen-menu.png)
 
 ## Software
 
