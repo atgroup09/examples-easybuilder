@@ -1,0 +1,308 @@
+22 serialization::archive 14 1048577 3 lib 17 0 104 13 mergeDWord_v2 7 2 5 5 3 185 sub unsigned int mergeDWord_v2(unsigned short Word0In, unsigned short Word1In)
+
+    unsigned int DWord = 0
+
+	DWord = (((0xFFFFFFFF & Word1In) << 16) | Word0In)
+
+	return DWord
+	
+end sub
+ 0 132 Merge Low and High Words into DWord
+
+Input arguments:
+Word0In - Low Word
+Word1In - High Word
+
+Return: Double Word (HighLow).
+ 104 10 mergeDWord 7 4 3 3 3 3 3 291 sub unsigned int mergeDWord(unsigned char Byte0In, unsigned char Byte1In, unsigned char Byte2In, unsigned char Byte3In)
+
+    unsigned int DWord = 0
+
+	DWord = (((0xFFFFFFFF & Byte3In) << 24) | ((0xFFFFFFFF & Byte2In) << 16) | ((0xFFFFFFFF & Byte1In) << 8) | Byte0In)
+
+	return DWord
+	
+end sub
+ 0 184 Merge Bytes into DWord
+
+Input arguments:
+Byte0In - first byte, Byte1In - second byte, Byte2In - third byte, Byte3In - fourth byte
+
+Return: Double Word (Byte3 Byte2 Byte1 Byte0).
+ 104 9 mergeWord 5 2 3 3 3 175 sub unsigned short mergeWord(unsigned char Byte0In, unsigned char Byte1In)
+
+    unsigned short Word = 0
+
+	Word = (((0xFFFF & Byte1In) << 8) | Byte0In)
+
+	return Word
+	
+end sub
+ 0 119 Merge Bytes into Word
+
+Input arguments:
+Byte0In - first byte, Byte1In - second byte
+
+Return: Word (Byte1 Byte0).
+ 104 5 Word0 5 1 7 3 136 sub unsigned short Word0(unsigned int DWordIn)
+
+    unsigned short Word = 0
+
+	Word = ((DWordIn >> 0)  & 0xFFFF)
+
+	return Word
+	
+end sub
+ 0 87 Extract Low Word from DWord
+
+Input arguments:
+DWordIn - DWord
+
+Return: Low Word.
+ 104 5 Word1 5 1 7 3 136 sub unsigned short Word1(unsigned int DWordIn)
+
+    unsigned short Word = 0
+
+	Word = ((DWordIn >> 16) & 0xFFFF)
+
+	return Word
+	
+end sub
+ 0 89 Extract High Word from DWord
+
+Input arguments:
+DWordIn - DWord
+
+Return: High Word.
+ 104 8 i3e754dw 8 1 7 3 577 sub float i3e754dw(unsigned int DWordIn)
+
+	float DecFloat = 0.0
+	float Po       = 0.0
+	float Sign     = 1.0
+	int SignBit    = 0
+    float Exp      = 0.0
+    float Mantissa = 0.0
+
+	SignBit = (DWordIn >> 31)
+	
+	if (SignBit < 0) then
+		SignBit = -1*SignBit
+	end if
+
+	if (SignBit == 1) then
+		Sign = -1.0
+	end if
+	
+	Exp = ((DWordIn >> 23) & 0xFF)
+	
+	if Exp > 0.0 then
+		Mantissa = ((DWordIn & 0x7FFFFF ) | 0x800000)
+	else
+		Mantissa = 	((DWordIn & 0x7FFFFF) << 1)
+	end if
+	
+    Exp = Exp - 127.0
+
+	POW(2.0, Exp-23.0, Po)
+    DecFloat = Sign*Mantissa*Po
+
+	return DecFloat
+	
+end sub
+ 0 135 Decode IEEE-754
+
+Input arguments:
+DWordIn - Double Word in IEEE-754 code
+
+Return:  Float value from Double Word in IEEE-754 code
+ 104 7 abs_int 6 1 6 3 131 sub int abs_int(int NumIn)
+
+	int Res = 0
+
+	if (NumIn < 0) then
+		Res = -1*NumIn
+	else
+		Res = NumIn
+	end if
+
+	return Res
+	
+end sub
+ 0 27 get absolute value from INT 104 7 i3e754w 8 2 5 5 3 722 sub float i3e754w(unsigned short Word0In, unsigned short Word1In)
+
+    unsigned int DWordIn = 0
+	float DecFloat       = 0.0
+	float Po             = 0.0
+	float Sign           = 1.0
+	int SignBit          = 0
+    float Exp            = 0.0
+    float Mantissa       = 0.0
+
+	DWordIn = (((0xFFFFFFFF & Word1In) << 16) | Word0In)
+
+	SignBit = (DWordIn >> 31)
+	
+	if (SignBit < 0) then
+		SignBit = -1*SignBit
+	end if
+
+	if (SignBit == 1) then
+		Sign = -1.0
+	end if
+	
+	Exp = ((DWordIn >> 23) & 0xFF)
+	
+	if Exp > 0.0 then
+		Mantissa = ((DWordIn & 0x7FFFFF ) | 0x800000)
+	else
+		Mantissa = 	((DWordIn & 0x7FFFFF) << 1)
+	end if
+	
+    Exp = Exp - 127.0
+
+	POW(2.0, Exp-23.0, Po)
+    DecFloat = Sign*Mantissa*Po
+
+	return DecFloat
+	
+end sub
+ 0 135 Decode IEEE-754
+
+Input arguments:
+Word0In - Low Word, Word1In - High Word.
+
+Return:  Float value from Double Word in IEEE-754 code 104 9 TmSecToHH 5 1 5 3 145 sub unsigned short TmSecToHH(unsigned short TmIn)
+
+unsigned short HH = 0
+
+HH = (TmIn/3600)
+
+if HH > 100 then
+	HH = 99
+end if
+
+return HH
+
+end sub
+ 0 0  104 9 TmSecToMM 5 1 5 3 188 sub unsigned short TmSecToMM(unsigned short TmIn)
+
+unsigned short MM = 0
+unsigned short tmp = 0
+
+tmp = (TmIn/60)
+
+if tmp < 60 then
+	MM = tmp
+else
+	MM = tmp - 60
+end if
+
+return MM
+
+end sub
+ 0 0  104 9 TmSecToSS 5 1 5 3 197 sub unsigned short TmSecToSS(unsigned short TmIn)
+
+unsigned short SS = 0
+unsigned short tmp = 0
+
+if TmIn < 60 then
+	SS = TmIn
+else
+	tmp = (TmIn/60)
+	SS = TmIn - (tmp*60)
+end if
+
+return SS
+
+end sub
+ 0 0  104 8 Byte0_32 3 1 7 3 134 sub unsigned char Byte0_32(unsigned int DWordIn)
+
+    unsigned char Byte = 0
+
+	Byte = ((DWordIn >> 0) & 0xFF)
+
+	return Byte
+	
+end sub
+ 0 91 Extract First Byte from DWord
+
+Input arguments:
+DWordIn - DWord
+
+Return: First Byte.
+ 104 8 Byte1_32 3 1 7 3 134 sub unsigned char Byte1_32(unsigned int DWordIn)
+
+    unsigned char Byte = 0
+
+	Byte = ((DWordIn >> 8) & 0xFF)
+
+	return Byte
+	
+end sub
+ 0 93 Extract Second Byte from DWord
+
+Input arguments:
+DWordIn - DWord
+
+Return: Second Byte.
+ 104 8 Byte2_32 3 1 7 3 135 sub unsigned char Byte2_32(unsigned int DWordIn)
+
+    unsigned char Byte = 0
+
+	Byte = ((DWordIn >> 16) & 0xFF)
+
+	return Byte
+	
+end sub
+ 0 91 Extract Third Byte from DWord
+
+Input arguments:
+DWordIn - DWord
+
+Return: Third Byte.
+ 104 8 Byte3_32 3 1 7 3 135 sub unsigned char Byte3_32(unsigned int DWordIn)
+
+    unsigned char Byte = 0
+
+	Byte = ((DWordIn >> 24) & 0xFF)
+
+	return Byte
+	
+end sub
+ 0 93 Extract Fourth Byte from DWord
+
+Input arguments:
+DWordIn - DWord
+
+Return: Fourth Byte.
+ 104 8 Byte0_16 3 1 5 3 134 sub unsigned char Byte0_16(unsigned short WordIn)
+
+    unsigned char Byte = 0
+
+	Byte = ((WordIn >> 0) & 0xFF)
+
+	return Byte
+	
+end sub
+ 0 88 Extract First Byte from Word
+
+Input arguments:
+WordIn - Word
+
+Return: First Byte.
+ 104 8 Byte1_16 3 1 5 3 134 sub unsigned char Byte1_16(unsigned short WordIn)
+
+    unsigned char Byte = 0
+
+	Byte = ((WordIn >> 8) & 0xFF)
+
+	return Byte
+	
+end sub
+ 0 90 Extract Second Byte from Word
+
+Input arguments:
+WordIn - Word
+
+Return: Second Byte.
+
